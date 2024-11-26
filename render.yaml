@@ -1,19 +1,26 @@
-# This is a basic example Blueprint for a Django web service and
-# the PostgreSQL database it connects to.
+# render.yaml
 services:
-  - type: web # A Python web service named django-app running on a free instance
-    plan: free
+  - type: web
     name: n8n
-    runtime: python
+    env: node
+    buildCommand: "npm install"
+    startCommand: "npm start"
     repo: https://github.com/Fagetd/n8n
-    buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker"
+    branch: main
+    region: France  # Vous pouvez changer la région selon vos préférences
+    autoDeploy: true  # Déployer automatiquement à chaque push sur la branche
     envVars:
-      - key: DATABASE_URL # Sets DATABASE_URL to the connection string of the django-app-db database
-        fromDatabase:
-          name: django-app-db
-          property: connectionString
+      - key: DATABASE_URL
+        value: "postgres://user:password@host:5432/dbname"
+    plan: free  # Choisir le plan approprié pour votre service (par ex. "free", "starter", "pro")
+    #staticPublishPath: /dist  # Si vous avez un build static, indiquez le chemin de publication
 
-databases:
-  - name: n8n-db # A PostgreSQL database named django-app-db running on a free instance
+  - type: cron
+    name: my-cron-job
+    schedule: "0 0 * * *"  # Chaque jour à minuit
+    command: "npm run cron-job"
+    env: node
+    repo: https://github.com/Fagetd/n8n
+    branch: main
+    region: France
     plan: free

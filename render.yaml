@@ -18,7 +18,7 @@ services:
   - type: cron
     name: my-cron-job
     schedule: "0 0 * * *"  # Chaque jour à minuit
-    command: "npm run cron-job"
+    #command: "npm run cron-job"
     env: node
     repo: https://github.com/Fagetd/n8n
     branch: main
